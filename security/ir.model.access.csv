@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_bt_ketronics_od12_bt_ketronics_od12,bt_ketronics_od12.bt_ketronics_od12,model_bt_ketronics_od12_bt_ketronics_od12,,1,0,0,0
+access_bt_ketronics_sales_report_bt_ketronics_sales_report,bt_ketronics_sales_report.bt_ketronics_sales_report,model_bt_ketronics_sales_report_bt_ketronics_sales_report,,1,0,0,0

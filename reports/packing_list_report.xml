@@ -1,6 +1,6 @@
 <odoo>
     <data>
-        <template id="bt_ketronics_od12.packing_list_report">
+        <template id="bt_ketronics_sales_report.packing_list_report">
             <t t-foreach="docs" t-as="doc">
                 <t t-call="web.basic_layout">
                     <div class="page" style="font-size:10pt;font-family:roman;">

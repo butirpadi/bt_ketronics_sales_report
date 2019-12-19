@@ -2,9 +2,9 @@
   <data>
     <!-- explicit list view definition -->
     <!--
-    <record model="ir.ui.view" id="bt_ketronics_od12.list">
-      <field name="name">bt_ketronics_od12 list</field>
-      <field name="model">bt_ketronics_od12.bt_ketronics_od12</field>
+    <record model="ir.ui.view" id="bt_ketronics_sales_report.list">
+      <field name="name">bt_ketronics_sales_report list</field>
+      <field name="model">bt_ketronics_sales_report.bt_ketronics_sales_report</field>
       <field name="arch" type="xml">
         <tree>
           <field name="name"/>
@@ -17,18 +17,18 @@
 
     <!-- actions opening views on models -->
     <!--
-    <record model="ir.actions.act_window" id="bt_ketronics_od12.action_window">
-      <field name="name">bt_ketronics_od12 window</field>
-      <field name="res_model">bt_ketronics_od12.bt_ketronics_od12</field>
+    <record model="ir.actions.act_window" id="bt_ketronics_sales_report.action_window">
+      <field name="name">bt_ketronics_sales_report window</field>
+      <field name="res_model">bt_ketronics_sales_report.bt_ketronics_sales_report</field>
       <field name="view_mode">tree,form</field>
     </record>
     -->
 
     <!-- server action to the one above -->
     <!--
-    <record model="ir.actions.server" id="bt_ketronics_od12.action_server">
-      <field name="name">bt_ketronics_od12 server</field>
-      <field name="model_id" ref="model_bt_ketronics_od12_bt_ketronics_od12"/>
+    <record model="ir.actions.server" id="bt_ketronics_sales_report.action_server">
+      <field name="name">bt_ketronics_sales_report server</field>
+      <field name="model_id" ref="model_bt_ketronics_sales_report_bt_ketronics_sales_report"/>
       <field name="state">code</field>
       <field name="code">
         action = {
@@ -42,19 +42,19 @@
 
     <!-- Top menu item -->
     <!--
-    <menuitem name="bt_ketronics_od12" id="bt_ketronics_od12.menu_root"/>
+    <menuitem name="bt_ketronics_sales_report" id="bt_ketronics_sales_report.menu_root"/>
     -->
     <!-- menu categories -->
     <!--
-    <menuitem name="Menu 1" id="bt_ketronics_od12.menu_1" parent="bt_ketronics_od12.menu_root"/>
-    <menuitem name="Menu 2" id="bt_ketronics_od12.menu_2" parent="bt_ketronics_od12.menu_root"/>
+    <menuitem name="Menu 1" id="bt_ketronics_sales_report.menu_1" parent="bt_ketronics_sales_report.menu_root"/>
+    <menuitem name="Menu 2" id="bt_ketronics_sales_report.menu_2" parent="bt_ketronics_sales_report.menu_root"/>
     -->
     <!-- actions -->
     <!--
-    <menuitem name="List" id="bt_ketronics_od12.menu_1_list" parent="bt_ketronics_od12.menu_1"
-              action="bt_ketronics_od12.action_window"/>
-    <menuitem name="Server to list" id="bt_ketronics_od12" parent="bt_ketronics_od12.menu_2"
-              action="bt_ketronics_od12.action_server"/>
+    <menuitem name="List" id="bt_ketronics_sales_report.menu_1_list" parent="bt_ketronics_sales_report.menu_1"
+              action="bt_ketronics_sales_report.action_window"/>
+    <menuitem name="Server to list" id="bt_ketronics_sales_report" parent="bt_ketronics_sales_report.menu_2"
+              action="bt_ketronics_sales_report.action_server"/>
     -->
   </data>
 </odoo>

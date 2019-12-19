@@ -75,7 +75,7 @@ class StatementOfAccount(models.TransientModel):
     def action_submit(self):
         self.ensure_one()
         # print('submit wizard')
-        # return self.env.ref('bt_ketronics_od12.action_report_statement_of_account').report_action(self)
+        # return self.env.ref('bt_ketronics_sales_report.action_report_statement_of_account').report_action(self)
 
         self.name = "Statement of Account"
 

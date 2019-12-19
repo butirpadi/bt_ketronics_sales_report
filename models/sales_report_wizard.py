@@ -218,4 +218,4 @@ class ButirSalesReportWizard(models.TransientModel):
         #     'target': 'current',
         # }
 
-        return self.env.ref('bt_ketronics_od12.action_butir_sales_report').report_action(self)
+        return self.env.ref('bt_ketronics_sales_report.action_butir_sales_report').report_action(self)

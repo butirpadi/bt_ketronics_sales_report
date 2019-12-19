@@ -2,8 +2,8 @@
 
 from odoo import models, fields, api
 
-# class bt_ketronics_od12(models.Model):
-#     _name = 'bt_ketronics_od12.bt_ketronics_od12'
+# class bt_ketronics_sales_report(models.Model):
+#     _name = 'bt_ketronics_sales_report.bt_ketronics_sales_report'
 
 #     name = fields.Char()
 #     value = fields.Integer()
