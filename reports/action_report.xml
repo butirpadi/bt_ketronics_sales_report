@@ -1,0 +1,94 @@
+<odoo>
+    <data>
+        <record model="report.paperformat" id="bt_generic_paperformat">
+            <field name="name">bt_generic_paperformat</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_width">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">10</field>
+            <field name="margin_right">7</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">96</field>
+        </record>
+               
+        <report 
+            id="action_report_statement_of_account" 
+            model="statement.of.account" 
+            string="Statement of Account" 
+            report_type="qweb-pdf" 
+            attachment_use="False"
+            print_report_name="'statement_of_account_%s' % object.end_of_date" 
+            name="bt_ketronics_od12.statement_of_account_report" 
+            file="bt_ketronics_od12.statement_of_account_report"
+            paperformat="bt_generic_paperformat" />
+        
+        <report 
+            id="action_report_packing_list" 
+            model="stock.picking" 
+            string="Packing List" 
+            report_type="qweb-pdf" 
+            attachment_use="False"
+            print_report_name="'packing_list_%s' % object.name" 
+            name="bt_ketronics_od12.packing_list_report" 
+            file="bt_ketronics_od12.packing_list_report"
+            paperformat="bt_generic_paperformat" />
+        
+        <report 
+            id="action_butir_sales_report" 
+            model="butir.sales.report.wizard" 
+            string="Sales Report" 
+            report_type="qweb-pdf" 
+            attachment_use="False"
+            print_report_name="'Sales_Report_%s' % object.date_start" 
+            name="bt_ketronics_od12.butir_sales_report_template" 
+            file="bt_ketronics_od12.butir_sales_report_template"
+            paperformat="bt_generic_paperformat" />
+
+        
+        <!-- Hide Action Report Bawaan -->
+        <report
+            id="account.account_invoices"
+            model="account.invoice"
+            string="Invoices"
+            report_type="qweb-pdf"
+            name="account.report_invoice_with_payments"
+            file="account.report_invoice_with_payments"
+            attachment="(object.state in ('open','in_payment','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            print_report_name="(object._get_report_base_filename())"
+            groups="account.group_account_invoice"
+            menu="False"
+        />
+
+        <report
+            id="account.account_invoices_without_payment"
+            model="account.invoice"
+            string="Invoices without Payment"
+            report_type="qweb-pdf"
+            name="account.report_invoice"
+            file="account.report_invoice"
+            attachment="(object.state in ('open','in_payment','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            print_report_name="(object._get_report_base_filename())"
+            menu="False"
+        />
+        <!-- End Of Hide Action Report Bawaan -->
+
+        <report
+            id="action_report_bt_customer_account_invoice"
+            model="account.invoice"
+            string="Customer Invoice"
+            report_type="qweb-pdf"
+            name="bt_ketronics_od12.bt_customer_account_invoice_report"
+            file="bt_ketronics_od12.bt_customer_account_invoice_report"
+            attachment_use="False"
+            print_report_name="'customer_invoice_%s' % object.number" 
+            paperformat="bt_generic_paperformat" />
+
+       
+
+    </data>
+</odoo>

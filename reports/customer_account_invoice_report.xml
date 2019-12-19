@@ -1,0 +1,299 @@
+<odoo>
+    <data>
+        <template id="bt_customer_account_invoice_report">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.basic_layout">
+                    <div class="page" style="font-size:10pt;">
+                        <style type="text/css">
+                            table.table-bordered, table.table-bordered thead tr th, table.table-bordered tbody tr td {
+                                border: black thin solid !important;
+                            }
+                            table.table thead tr th{
+                                text-align:center;
+                                vertical-align:middle;
+                            }
+                            table.table-header tbody tr td{
+                                padding:0;
+                            }
+
+                            table.table-borderless, table.table-borderless thead tr th, table.table-borderless tbody tr td {
+                                border: none !important;
+                            }
+
+                            tr.data-content td{
+                                padding-top:0;
+                                padding-bottom:0;
+                            }
+                        </style>
+
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="row">
+                                            <div class="col-12 text-center">
+                                                <h3 t-field="user.company_id.name" style="font-weight:bolder;margin-bottom:0;" />
+                                                <span t-field="user.company_id.street" />
+                                                <t t-if="user.company_id.street2">
+                                                    <span>, </span>
+                                                    <span t-field="user.company_id.street2" />
+                                                </t>
+                                                <br/>
+                                                <span t-field="user.company_id.city" />
+                                                <span t-if="user.company_id.city">, </span>
+                                                <span t-field="user.company_id.state_id.name" />
+                                                <span t-if="user.company_id.state_id">, </span>
+                                                <span t-field="user.company_id.country_id.name" />
+                                                <br/>
+                                                <span t-if="user.company_id.phone">Phone. </span>
+                                                <span t-field="user.company_id.phone" />
+                                                <![CDATA[&nbsp;]]>
+                                                <span t-if="user.company_id.fax">Fax. </span>
+                                                <span t-field="user.company_id.fax" />
+                                                <br/>
+                                                <t t-if="user.company_id.vat">
+                                                    <span t-if="user.company_id.vat">NPWP. </span>
+                                                    <span t-field="user.company_id.vat" />
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        <h5>INVOICE</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <table class="table table-borderless table-sm">
+                                                    <tbody>
+                                                        <tr class="data-content">
+                                                            <td style="width:15%;">
+                                                                <strong>Reff</strong>
+                                                            </td>
+                                                            <td style="width:10px;">
+                                                                <strong>:</strong>
+                                                            </td>
+                                                            <td style="width:30%;">
+                                                                <span t-field="doc.number" />
+                                                            </td>
+                                                            <td rowspan="3">
+                                                                <strong>Company</strong>
+                                                                <br/>
+                                                                <span t-field="doc.partner_id.name" />
+                                                                <br/>
+                                                                <span t-field="doc.partner_id.street" />
+                                                                <t t-if="doc.partner_id.street2">
+                                                                    <br/>
+                                                                    <span>, </span>
+                                                                    <span t-field="doc.partner_id.street2" />
+                                                                </t>
+                                                                <br/>
+                                                                <span t-field="doc.partner_id.city" />
+                                                                <span t-if="doc.partner_id.city">, </span>
+                                                                <span t-field="doc.partner_id.state_id.name" />
+                                                                <span t-if="doc.partner_id.state_id">, </span>
+                                                                <span t-field="doc.partner_id.country_id.name" />
+                                                                <br/>
+                                                                <span t-if="doc.partner_id.phone">Phone. </span>
+                                                                <span t-field="doc.partner_id.phone" />
+
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="data-content">
+                                                            <td>
+                                                                <strong>Date</strong>
+                                                            </td>
+                                                            <td>
+                                                                <strong>:</strong>
+                                                            </td>
+                                                            <td>
+                                                                <span t-field="doc.date_invoice" t-options='{"format": "dd MMMM yyyy"}'/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="data-content">
+                                                            <td>
+                                                                <strong>Term of Payment</strong>
+                                                            </td>
+                                                            <td>
+                                                                <strong>:</strong>
+                                                            </td>
+                                                            <td>
+                                                                <span t-field="doc.payment_term_id.name" />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- table of content -->
+                                <tr class="data-content">
+                                    <td class="text-center">
+                                        <strong>No</strong>
+                                    </td>
+                                    <td class="text-center">
+                                        <strong>Description</strong>
+                                    </td>
+                                    <td class="text-center">
+                                        <t t-if="doc.manufacture_type == 'subcon'">
+                                            <strong>M/Order</strong>
+                                        </t>
+                                        <t t-if="doc.manufacture_type == 'in_house'">
+                                            <strong>Order Reff</strong>
+                                        </t>
+                                    </td>
+                                    <td class="text-center">
+                                        <strong>Quantity</strong>
+                                    </td>
+                                    <td class="text-center">
+                                        <strong>Price</strong>
+                                    </td>
+                                    <td class="text-center">
+                                        <strong>Amount</strong>
+                                    </td>
+                                </tr>
+                                <t t-set="rownum" t-value="1"/>
+                                <t t-foreach="doc.invoice_line_ids" t-as="line">
+                                    <tr class="data-content">
+                                        <td>
+                                            <span t-esc="rownum" />
+                                        </td>
+                                        <td>
+                                            <span t-field="line.name" />
+                                        </td>
+                                        <td>
+                                            <t t-if="doc.manufacture_type == 'subcon'">
+                                                <span t-field="line.manufacture_order_id.name" />
+                                            </t>
+                                            <t t-if="doc.manufacture_type == 'in_house'">
+                                                <span t-field="line.sale_order_id.client_order_ref" />
+                                            </t>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="'{0:,.2f}'.format(line.quantity)" />
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="'{0:,.2f}'.format(line.price_unit)" />
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-esc="'{0:,.2f}'.format(line.price_subtotal)" />
+                                        </td>
+                                    </tr>
+
+                                    <t t-set="rownum" t-value="rownum + 1"/>
+                                </t>
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <t t-if="user.company_id.invoice_footer_note">
+                                                    <small t-field="user.company_id.invoice_footer_note" />
+                                                </t>
+                                            </div>
+                                            <div class="col-6">
+                                                <table class="table table-sm table-borderless">
+                                                    <tbody>
+                                                        <tr class="data-content">
+                                                            <td style="width:150px;">
+                                                                <strong>TOTAL</strong>
+                                                            </td>
+                                                            <td style="width:20px;">
+                                                                <strong>:</strong>
+                                                            </td>
+                                                            <td style="width:20px;">
+                                                                <strong t-field="doc.currency_id.name" />
+                                                            </td>
+                                                            <td class="text-right">
+                                                                <t t-esc="'{0:,.2f}'.format(doc.amount_untaxed)" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="data-content">
+                                                            <td>
+                                                                <strong>VAT</strong>
+                                                            </td>
+                                                            <td style="width:20px;">
+                                                                <strong>:</strong>
+                                                            </td>
+                                                            <td style="width:20px;">
+                                                                <strong t-field="doc.currency_id.name" />
+                                                            </td>
+                                                            <td class="text-right">
+                                                                <t t-esc="'{0:,.2f}'.format(doc.amount_tax)" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="data-content">
+                                                            <td>
+                                                                <strong>GRAND TOTAL</strong>
+                                                            </td>
+                                                            <td style="width:20px;">
+                                                                <strong>:</strong>
+                                                            </td>
+                                                            <td style="width:20px;">
+                                                                <strong t-field="doc.currency_id.name" />
+                                                            </td>
+                                                            <td class="text-right">
+                                                                <t t-esc="'{0:,.2f}'.format(doc.amount_total)" />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <!-- Signature -->
+                                        <div class="row">
+                                            <div class="col-6 text-center">
+                                                <span>Receiver,</span>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                ______________________________
+                                            </div>
+                                            <div class="col-6 text-center">
+                                                <span t-field="user.company_id.city" />
+                                                <span>, </span>
+                                                <span t-field="doc.date_invoice" t-options='{"format": "dd MMMM yyyy"}'/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <t t-if="doc.authorized_name">
+                                                    <span>( </span>
+                                                    <span t-field="doc.authorized_name" />
+                                                    <span>) </span>
+                                                </t>
+                                                <t t-else="doc.authorized_name">
+                                                    ______________________________
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,265 @@
+<odoo>
+    <data>
+        <template id="bt_ketronics_od12.packing_list_report">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.basic_layout">
+                    <div class="page" style="font-size:10pt;font-family:roman;">
+                        <style type="text/css">
+                            table.table-bordered, table.table-bordered thead tr th, table.table-bordered tbody tr td {
+                                border: black thin solid !important;
+                            }
+                            table.table thead tr th, tr.thead td{
+                                text-align:center;
+                                vertical-align:middle;
+                            }
+                            table.table-header tbody tr td{
+                                padding:0;
+                            }
+
+                            table.table-borderless, table.table-borderless thead tr th, table.table-borderless tbody tr td {
+                                border: none !important;
+                            }
+
+                            tr.data-content td{
+                                padding-top:0;
+                                padding-bottom:0;
+                            }
+                        </style>
+
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td colspan="8">
+                                        <h5 t-field="user.company_id.name" />
+                                        <span t-field="user.company_id.street" />
+                                        <t t-if="user.company_id.street2">
+                                            <span>, </span>
+                                            <span t-field="user.company_id.street2" />
+                                        </t>
+                                        <br/>
+                                        <span t-field="user.company_id.city" />
+                                        <span t-if="user.company_id.city">, </span>
+                                        <span t-field="user.company_id.state_id.name" />
+                                        <span t-if="user.company_id.state_id">, </span>
+                                        <span t-field="user.company_id.country_id.name" />
+                                        <br/>
+                                        <span t-if="user.company_id.phone">Phone. </span>
+                                        <span t-field="user.company_id.phone" />
+                                        <![CDATA[&nbsp;]]>
+                                        <span t-if="user.company_id.fax">Fax. </span>
+                                        <span t-field="user.company_id.fax" />
+                                        <br/>
+                                        <br/>
+                                        <h5 class="text-center">PACKING LIST</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8">
+                                        <table class="table table-sm table-borderless">
+                                            <tbody>
+                                                <tr class="data-content">
+                                                    <td rowspan="3" style="width:70%;">
+                                                        <strong>SHIP TO : </strong>
+                                                        <br/>
+                                                        <span t-field="doc.partner_id" />
+                                                        <br/>
+                                                        <span t-field="doc.partner_id.street" />
+                                                        <t t-if="doc.partner_id.street2">
+                                                            <span>, </span>
+                                                            <span t-field="doc.partner_id.street2" />
+                                                        </t>
+                                                        <br/>
+                                                        <span t-field="doc.partner_id.city" />
+                                                        <span t-if="doc.partner_id.city">, </span>
+                                                        <span t-field="doc.partner_id.state_id.name" />
+                                                        <span t-if="doc.partner_id.state_id">, </span>
+                                                        <span t-field="doc.partner_id.country_id.name" />
+                                                        <br/>
+                                                        <span t-if="doc.partner_id.phone">Phone. </span>
+                                                        <span t-field="doc.partner_id.phone" />
+                                                    </td>
+                                                    <td>
+                                                        <strong>No</strong>
+                                                    </td>
+                                                    <td>
+                                                        <strong>:</strong>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.name" />
+                                                    </td>
+                                                </tr>
+                                                <tr class="data-content">
+                                                    <td>
+                                                        <strong>Date</strong>
+                                                    </td>
+                                                    <td>
+                                                        <strong>:</strong>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.scheduled_date" t-options='{"format": "dd MMMM yyyy"}'/>
+                                                    </td>
+                                                </tr>
+                                                <tr class="data-content">
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr class="thead data-content">
+                                    <td>
+                                        <strong>No</strong>
+                                    </td>
+                                    <td>
+                                        <strong>Part No</strong>
+                                    </td>
+                                    <td colspan="2">
+                                        <strong>Description</strong>
+                                    </td>
+                                    <td>
+                                        <strong>Quantity</strong>
+                                    </td>
+                                    <td>
+                                        <strong>Packing</strong>
+                                    </td>
+                                    <td>
+                                        <strong>Gross Weight</strong>
+                                        <br/>
+                                        <strong>Kg</strong>
+                                    </td>
+                                    <td>
+                                        <strong>Net Weight</strong>
+                                        <br/>
+                                        <strong>Kg</strong>
+                                    </td>
+                                </tr>
+                                <t t-set="rownum" t-value="1"/>
+                                <t t-set="total_qty_done" t-value="0"/>
+                                <t t-set="total_pack" t-value="0"/>
+                                <t t-set="total_gross" t-value="0"/>
+                                <t t-set="total_net" t-value="0"/>
+                                <t t-foreach="doc.move_ids_without_package" t-as="move">
+                                    <tr class="data-content">
+                                        <td>
+                                            <span t-esc="rownum" />
+                                        </td>
+                                        <td>
+                                            <span t-field="move.product_id.default_code" />
+                                        </td>
+                                        <td>
+                                            <span t-field="move.product_id.name" />
+                                        </td>
+                                        <td class="text-center">
+                                            <t t-if="move.sale_line_id.order_id">
+                                                <t t-if="move.sale_line_id.order_id.manufacture_type == 'in_house'">
+                                                    <t t-if="move.sale_line_id.order_id.client_order_ref">
+                                                        <span t-field="move.sale_line_id.order_id.client_order_ref" />
+                                                    </t>
+                                                    <t t-else="move.sale_line_id.order_id.client_order_ref">
+                                                        <span t-field="move.sale_line_id.order_id.name" />
+                                                    </t>
+                                                </t>
+                                                <t t-if="move.sale_line_id.order_id.manufacture_type == 'subcon'">
+                                                    <span t-field="move.manufacture_order_id.name" />
+                                                </t>
+                                            </t>
+                                            <t t-else="move.sale_line_id.order_id">
+                                                <t t-if="doc.pick_manufacture_type == 'in_house'">
+                                                    <t t-if="move.sale_order_id.client_order_ref">
+                                                        <span t-field="move.sale_order_id.client_order_ref" />
+                                                    </t>
+                                                    <t t-else="move.sale_order_id.client_order_ref">
+                                                        <span t-field="move.sale_order_id.name" />
+                                                    </t>
+                                                </t>
+                                                <t t-if="doc.pick_manufacture_type == 'subcon'">
+                                                    <span t-field="move.manufacture_order_id.name" />
+                                                </t>
+                                            </t>
+                                            
+                                        </td>
+                                        <td class="text-right">
+                                            <strong t-esc="'{0:,.2f}'.format(move.quantity_done)" />
+                                        </td>
+                                        <td class="text-right">
+                                            <strong t-esc="'{0:,.0f}'.format(move.pack_qty)" />
+                                        </td>
+                                        <td class="text-right">
+                                            <strong t-esc="'{0:,.2f}'.format(move.gross_weight)" />
+                                        </td>
+                                        <td class="text-right">
+                                            <strong t-esc="'{0:,.2f}'.format(move.net_weight)" />
+                                        </td>
+                                    </tr>
+                                    <t t-set="total_qty_done" t-value="total_qty_done + move.quantity_done"/>
+                                    <t t-set="total_pack" t-value="total_pack + move.pack_qty"/>
+                                    <t t-set="total_gross" t-value="total_gross + move.gross_weight"/>
+                                    <t t-set="total_net" t-value="total_net + move.net_weight"/>
+                                    <t t-set="rownum" t-value="rownum + 1"/>
+                                </t>
+                                <tr>
+                                    <td colspan="4" class="text-center">
+                                        <strong>TOTAL</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <strong t-esc="'{0:,.2f}'.format(total_qty_done)" />
+                                    </td>
+                                    <td class="text-right">
+                                        <strong t-esc="'{0:,.0f}'.format(total_pack)" />
+                                    </td>
+                                    <td class="text-right">
+                                        <strong t-esc="'{0:,.2f}'.format(total_gross)" />
+                                    </td>
+                                    <td class="text-right">
+                                        <strong t-esc="'{0:,.2f}'.format(total_net)" />
+                                    </td>
+                                </tr>
+                                <!-- Approval -->
+                                <tr>
+                                    <td colspan="8">
+                                        <div class="row">
+                                            <div class="col-6 text-center">
+                                                Receive,
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                ___________________________
+                                            </div>
+                                            <div class="col-6 text-center">
+                                                Sender,
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <t t-if="doc.sender_by">
+                                                    <span>(</span>
+                                                    <span t-field="doc.sender_by" />
+                                                    <span>)</span>
+                                                </t>
+                                                <t t-else="doc.sender_by">
+                                                    ___________________________
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,428 @@
+<odoo>
+    <data>
+        <template id="statement_of_account_report">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.basic_layout">
+                    <div class="page" style="font-size:10pt;">
+                        <style type="text/css">
+                            table.table-bordered, table.table-bordered thead tr th, table.table-bordered tbody tr td {
+                                border: black thin solid !important;
+                            }
+                            table.table thead tr th{
+                                text-align:center;
+                                vertical-align:middle;
+                            }
+                            table.table-header tbody tr td{
+                                padding:0;
+                            }
+                        </style>
+                        <!-- Table Header -->
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <h4 t-field="user.company_id.name" style="margin:0;font-weight:bolder;" />
+                                <strong>STATEMENT OF ACCOUNT</strong>
+                                <br/>
+                            </div>
+                        </div>
+
+                        <!-- Table Data Parameter -->
+                        <div class="row">
+                            <div class="col-4">
+                                <table class="table table-sm table-borderless table-header">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <span t-field="doc.partner_id.name" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span t-field="doc.partner_id.street" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span t-field="doc.partner_id.street2" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span t-field="doc.partner_id.city" />
+                                                <![CDATA[&nbsp;]]>
+                                                <span t-field="doc.partner_id.state_id" />
+                                                <![CDATA[&nbsp;]]>
+                                                <span t-field="doc.partner_id.zip" />
+                                                <![CDATA[&nbsp;]]>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <br/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>
+                                                Statement of the period ending : 
+                                                </span>
+                                                <span t-field="doc.end_of_date" t-options='{"format": "dd MMM yyyy"}' />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-4"></div>
+                            <div class="col-4">
+                                <table class="table table-sm table-borderless table-header">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                Date
+                                            </td>
+                                            <td>
+                                                :
+                                            </td>
+                                            <td>
+                                                <span t-field="doc.print_date" t-options='{"format": "dd MMM yyyy"}' />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Currency
+                                            </td>
+                                            <td>
+                                                :
+                                            </td>
+                                            <td>
+                                                <span t-field="user.company_id.currency_id.name" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Table Data -->
+                        <div class="row">
+                            <div class="col-12">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2">DATE</th>
+                                            <th rowspan="2">NO. INVOICE</th>
+                                            <th rowspan="2">NO. REFF</th>
+                                            <th rowspan="2">MODEL</th>
+                                            <th rowspan="2">M/ORDER</th>
+                                            <th rowspan="2">
+                                                QUANTITY<br/>
+                                                (PCS)
+                                            </th>
+                                            <th rowspan="2">PRICE</th>
+                                            <th colspan="2">AMOUNT</th>
+                                        </tr>
+                                        <tr>
+                                            <th>DPP</th>
+                                            <th>VAT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="total_amount_untaxed" t-value="0"/>
+                                        <t t-set="total_amount_taxed" t-value="0"/>
+
+                                        <t t-set="total_quantity" t-value="0"/>
+                                        <t t-set="total_dpp" t-value="0"/>
+
+                                        <t t-foreach="doc.invoice_ids" t-as="inv">
+                                            <t t-set="total_amount_untaxed" t-value="total_amount_untaxed + inv.amount_untaxed"/>
+                                            <t t-set="total_amount_taxed" t-value="total_amount_taxed + inv.amount_total"/>
+
+                                            <t t-if="len(inv.sale_order_ids) &gt; 0">
+                                                <t t-foreach="inv.sale_order_ids" t-as="so">
+                                                    <t t-set="total_qty_per_so" t-value="0"/>
+                                                    <t t-set="subtotal_per_so" t-value="0"/>
+                                                    <t t-set="inv_lines" t-value="inv.invoice_line_ids.filtered(lambda x: x.sale_order_id.id == so.id)"/>
+
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <span t-field="inv.date" t-options='{"format": "dd-MMM-yyyy"}' />
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <span t-field="inv.number" />
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <span t-field="so.name" />
+                                                        </td>
+                                                        <td>
+                                                            <t t-foreach="inv_lines" t-as="line">
+                                                                <span t-field="line.product_id" />
+                                                                <br/>
+                                                            </t>
+                                                        </td>
+                                                        <td>
+                                                            <t t-foreach="inv_lines" t-as="line">
+                                                                <span t-field="line.manufacture_order_id" />
+                                                                <br/>
+                                                            </t>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <t t-foreach="inv_lines" t-as="line">
+                                                                <t t-esc="'{0:,.2f}'.format(line.quantity)" />
+                                                                <br/>
+                                                                <t t-set="total_qty_per_so" t-value="total_qty_per_so+line.quantity"/>
+                                                                <t t-set="total_quantity" t-value="total_quantity + line.quantity"/>
+                                                            </t>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <t t-foreach="inv_lines" t-as="line">
+                                                                <!--<t t-if="inv.currency_id.position == 'before'">
+                                                                    <span t-field="inv.currency_id.symbol" />
+                                                                    <![CDATA[&nbsp;]]>
+                                                                </t>-->
+                                                                <span t-field="line.price_unit" />
+                                                                <!--<t t-if="inv.currency_id.position == 'after'">
+                                                                    <![CDATA[&nbsp;]]>
+                                                                    <span t-field="inv.currency_id.symbol" />
+                                                                </t>-->
+                                                                <br/>
+                                                                <t t-set="subtotal_per_so" t-value="subtotal_per_so + (line.price_unit * line.quantity)"/>
+                                                                <t t-set="total_dpp" t-value="total_dpp + (line.price_unit * line.quantity)"/>
+                                                            </t>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <t t-foreach="inv_lines" t-as="line">
+                                                                <!--<t t-if="inv.currency_id.position == 'before'">
+                                                                    <span t-field="inv.currency_id.symbol" />
+                                                                    <![CDATA[&nbsp;]]>
+                                                                </t>-->
+                                                                <t t-esc="'{0:,.2f}'.format(line.price_subtotal)" />
+                                                                <!--<t t-if="inv.currency_id.position == 'after'">
+                                                                    <![CDATA[&nbsp;]]>
+                                                                    <span t-field="inv.currency_id.symbol" />
+                                                                </t>-->
+                                                                <br/>
+                                                            </t>
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <t t-foreach="inv_lines" t-as="line">
+                                                                <t t-foreach="line.invoice_line_tax_ids" t-as="tax">
+                                                                    <t t-esc="tax.description" />
+                                                                    <span>;</span>
+                                                                    <![CDATA[&nbsp;]]>
+                                                                </t>
+                                                                <br/>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="5"></td>
+                                                        <td class="text-right">
+                                                            <t t-esc="'{0:,.2f}'.format(total_qty_per_so)" />
+                                                        </td>
+                                                        <td></td>
+                                                        <td class="text-right">
+                                                            <!--<t t-if="inv.currency_id.position == 'before'">
+                                                                <span t-field="inv.currency_id.symbol" />
+                                                                <![CDATA[&nbsp;]]>
+                                                            </t>-->
+                                                            <t t-esc="'{0:,.2f}'.format(subtotal_per_so)" />
+                                                            <!--<t t-if="inv.currency_id.position == 'after'">
+                                                                <![CDATA[&nbsp;]]>
+                                                                <span t-field="inv.currency_id.symbol" />
+                                                            </t>-->
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                            <t t-else="len(inv.sale_order_ids) &gt; 0">
+                                                <t t-set="total_qty_per_so" t-value="0"/>
+                                                <t t-set="subtotal_per_so" t-value="0"/>
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <span t-field="inv.date" t-options='{"format": "dd-MMM-yyyy"}' />
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span t-field="inv.number" />
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span t-field="inv.origin" />
+                                                    </td>
+                                                    <td>
+                                                        <t t-foreach="inv.invoice_line_ids" t-as="line">
+                                                            <span t-field="line.product_id" />
+                                                            <br/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <t t-foreach="inv.invoice_line_ids" t-as="line">
+                                                            <span t-field="line.manufacture_order_id" />
+                                                            <br/>
+                                                        </t>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <t t-foreach="inv.invoice_line_ids" t-as="line">
+                                                            <t t-esc="'{0:,.2f}'.format(line.quantity)" />
+                                                            <br/>
+                                                            <t t-set="total_qty_per_so" t-value="total_qty_per_so+line.quantity"/>
+                                                            <t t-set="total_quantity" t-value="total_quantity + line.quantity"/>
+                                                        </t>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <t t-foreach="inv.invoice_line_ids" t-as="line">
+                                                            <!--<t t-if="inv.currency_id.position == 'before'">
+                                                                <span t-field="inv.currency_id.symbol" />
+                                                                <![CDATA[&nbsp;]]>
+                                                            </t>-->
+                                                            <span t-field="line.price_unit" />
+                                                            <!--<t t-if="inv.currency_id.position == 'after'">
+                                                                <![CDATA[&nbsp;]]>
+                                                                <span t-field="inv.currency_id.symbol" />
+                                                            </t>-->
+                                                            <br/>
+                                                            <t t-set="subtotal_per_so" t-value="subtotal_per_so + (line.price_unit * line.quantity)"/>
+                                                            <t t-set="total_dpp" t-value="total_dpp + (line.price_unit * line.quantity)"/>
+                                                        </t>
+
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <t t-foreach="inv.invoice_line_ids" t-as="line">
+                                                            <!--<t t-if="inv.currency_id.position == 'before'">
+                                                                <span t-field="inv.currency_id.symbol" />
+                                                                <![CDATA[&nbsp;]]>
+                                                            </t>-->
+                                                            <t t-esc="'{0:,.2f}'.format(line.price_subtotal)" />
+                                                            <!--<t t-if="inv.currency_id.position == 'after'">
+                                                                <![CDATA[&nbsp;]]>
+                                                                <span t-field="inv.currency_id.symbol" />
+                                                            </t>-->
+                                                            <br/>
+                                                        </t>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <t t-foreach="inv.invoice_line_ids" t-as="line">
+                                                            <t t-foreach="line.invoice_line_tax_ids" t-as="tax">
+                                                                <t t-esc="tax.description" />
+                                                                <span>;</span>
+                                                                <![CDATA[&nbsp;]]>
+                                                            </t>
+                                                            <br/>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="5"></td>
+                                                    <td class="text-right">
+                                                        <t t-esc="'{0:,.2f}'.format(total_qty_per_so)" />
+                                                    </td>
+                                                    <td></td>
+                                                    <td class="text-right">
+                                                        <!--<t t-if="inv.currency_id.position == 'before'">
+                                                                <span t-field="inv.currency_id.symbol" />
+                                                                <![CDATA[&nbsp;]]>
+                                                            </t>-->
+                                                        <t t-esc="'{0:,.2f}'.format(subtotal_per_so)" />
+                                                        <!--<t t-if="inv.currency_id.position == 'after'">
+                                                                <![CDATA[&nbsp;]]>
+                                                                <span t-field="inv.currency_id.symbol" />
+                                                            </t>-->
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            </t>
+                                        </t>
+
+                                        <!-- TOTAL END -->
+                                        <tr>
+                                            <td colspan="9">
+                                                <br/>
+                                            </td>
+                                        </tr>
+                                        <t t-set="tax_ids" t-value="doc.get_tax_ids()"/>
+                                        <tr>
+                                            <td rowspan="4" colspan="6" class="text-right" style="vertical-align:middle;">
+                                                <strong>QUANTITY : </strong>
+                                                <strong t-esc="'{0:,.2f}'.format(total_quantity)" />
+
+                                            </td>
+                                            <td  >
+                                                <strong>DPP</strong>
+                                            </td>
+                                            <td colspan="2" class="text-right">
+                                                <strong t-esc="'{0:,.2f}'.format(total_amount_untaxed)" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <t t-foreach="tax_ids" t-as="tax">
+                                                    <strong t-esc="tax.name" />
+                                                    <br/>
+                                                </t>
+                                            </td>
+                                            <td colspan="2" class="text-right">
+                                                <t t-foreach="tax_ids" t-as="tax">
+                                                    <strong t-esc="'{0:,.2f}'.format(tax_ids[tax])" />
+                                                    <br/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>TOTAL</strong>
+                                            </td>
+                                            <td colspan="2" class="text-right">
+                                                <strong t-esc="'{0:,.2f}'.format(total_amount_taxed)" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+                        </div>
+
+                        <!-- Sign Section -->
+                        <div class="row" >
+                            <div class="col-8" >
+                                <t t-if="user.company_id.invoice_footer_note">
+                                    <span t-field="user.company_id.invoice_footer_note" />
+                                </t>
+                            </div>
+                            <div class="col-4 text-center" >
+                                <br/>
+                                <br/>
+                                Issued by,
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                _____________________<br/>
+                                Authorized Signature
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <span>Page </span>
+                        <span class="page" />
+                        <span>of</span>
+                        <span class="topage" />
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

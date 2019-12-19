@@ -1,0 +1,146 @@
+<odoo>
+    <data>
+        <template id="butir_sales_report_template">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="doc">
+                    <div class="page" style="font-size:10pt;">
+                        <div class="text-center">
+                            <h6>LAPORAN PENJUALAN</h6>
+                            <h6 t-field="user.company_id.name" />
+                            <span t-field="doc.date_start" />
+                            <span> - </span>
+                            <span t-field="doc.date_to" />
+                            <br/>
+                            <![CDATA[&nbsp;]]>
+                        </div>
+
+                        <div cass="row">
+                            <div class="col-xs-12" style="font-size:9pt;" >
+                                <table class="table table-condensed table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th >
+                                                <strong>BULAN</strong>
+                                            </th>
+                                            <th >
+                                                <strong>CUSTOMER</strong>
+                                            </th>
+                                            <th class="text-right">
+                                                <strong>DPP (USD)</strong>
+                                            </th>
+                                            <th class="text-right">
+                                                <strong>PPN (USD)</strong>
+                                            </th>
+                                            <th class="text-right">
+                                                <strong>DPP + PPN (USD)</strong>
+                                            </th>
+                                            <th class="text-right">
+                                                <strong>DPP (IDR)</strong>
+                                            </th>
+                                            <th class="text-right">
+                                                <strong>PPN (IDR)</strong>
+                                            </th>
+                                            <th class="text-right">
+                                                <strong>DPP + PPN (IDR)</strong>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <t t-set="all_invoices" t-value="doc.get_filtered_invoice_ids()" />
+
+                                        <t t-foreach="all_invoices" t-as="inv_month">
+
+                                            <t t-set="sum_dpp_usd" t-value="0.0" />
+                                            <t t-set="sum_tax_usd" t-value="0.0" />
+                                            <t t-set="sum_dpp_tax_usd" t-value="0.0" />
+                                            <t t-set="sum_dpp_idr" t-value="0.0" />
+                                            <t t-set="sum_tax_idr" t-value="0.0" />
+                                            <t t-set="sum_dpp_tax_idr" t-value="0.0" />
+
+
+                                            <tr t-if="all_invoices[inv_month]['partner_count'] > 0">
+                                                <td colspan="8">
+                                                    <strong t-esc="all_invoices[inv_month]['monthname']" />
+                                                </td>
+                                            </tr>
+
+                                            <t t-if="all_invoices[inv_month]['partner_count'] > 0" t-foreach="all_invoices[inv_month]['partner_invoices']" t-as="inv_partner">
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <t t-esc="inv_partner" />
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <t t-set="dpp_usd_val" t-value="all_invoices[inv_month]['partner_invoices'][inv_partner]['dpp_usd']" />
+                                                        <t t-esc="'{0:,.2f}'.format(dpp_usd_val)" />
+                                                        <t t-set="sum_dpp_usd" t-value="sum_dpp_usd + dpp_usd_val" />
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <t t-set="tax_usd_val" t-value="all_invoices[inv_month]['partner_invoices'][inv_partner]['tax_usd']" />
+                                                        <t t-esc="'{0:,.2f}'.format(tax_usd_val)" />
+                                                        <t t-set="sum_tax_usd" t-value="sum_tax_usd + tax_usd_val" />
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <t t-set="dpp_tax_usd_val" t-value="all_invoices[inv_month]['partner_invoices'][inv_partner]['dpp_tax_usd']" />
+                                                        <t t-esc="'{0:,.2f}'.format(dpp_tax_usd_val)" />
+                                                        <t t-set="sum_dpp_tax_usd" t-value="sum_dpp_tax_usd + dpp_tax_usd_val" />
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <t t-set="dpp_idr_val" t-value="all_invoices[inv_month]['partner_invoices'][inv_partner]['dpp_idr']" />
+                                                        <t t-esc="'{0:,.2f}'.format(dpp_idr_val)" />
+                                                        <t t-set="sum_dpp_idr" t-value="sum_dpp_idr + dpp_idr_val" />
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <t t-set="tax_idr_val" t-value="all_invoices[inv_month]['partner_invoices'][inv_partner]['tax_idr']" />
+                                                        <t t-esc="'{0:,.2f}'.format(tax_idr_val)" />
+                                                        <t t-set="sum_tax_idr" t-value="sum_tax_idr + tax_idr_val" />
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <t t-set="dpp_tax_idr_val" t-value="all_invoices[inv_month]['partner_invoices'][inv_partner]['dpp_tax_idr']" />
+                                                        <t t-esc="'{0:,.2f}'.format(dpp_tax_idr_val)" />
+                                                        <t t-set="sum_dpp_tax_idr" t-value="sum_dpp_tax_idr + dpp_tax_idr_val" />
+                                                    </td>
+                                                </tr>
+                                            </t>
+
+                                            <tr t-if="all_invoices[inv_month]['partner_count'] > 0">
+                                                <td colspan="2">
+                                                    <strong>Total <span t-esc="all_invoices[inv_month]['monthname']" />
+                                                    </strong>
+                                                </td>
+                                                <td class="text-right">
+                                                    <strong t-esc="'{0:,.2f}'.format(sum_dpp_usd)" />
+                                                </td>
+
+                                                <td class="text-right">
+                                                    <strong t-esc="'{0:,.2f}'.format(sum_tax_usd)" />
+                                                </td>
+
+                                                <td class="text-right">
+                                                    <strong t-esc="'{0:,.2f}'.format(sum_dpp_tax_usd)" />
+                                                </td>
+
+                                                <td class="text-right">
+                                                    <strong t-esc="'{0:,.2f}'.format(sum_dpp_idr)" />
+                                                </td>
+
+                                                <td class="text-right">
+                                                    <strong t-esc="'{0:,.2f}'.format(sum_tax_idr)" />
+                                                </td>
+
+                                                <td class="text-right">
+                                                    <strong t-esc="'{0:,.2f}'.format(sum_dpp_tax_idr)" />
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

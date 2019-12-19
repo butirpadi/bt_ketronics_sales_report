@@ -1,0 +1,30 @@
+<odoo>
+    <data>
+    
+        <!-- model.name inherit form view -->
+        <record id="bt_kt_base_view_company_form" model="ir.ui.view">
+            <field name="name">bt_kt_base_view_company_form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page name="invoicing" string="Invoicing">
+                        <field name="invoice_footer_note" placeholder="Invoice Footer Note..." />
+                        <!-- <field name="invoice_footer_html_note" placeholder="Invoice Footer Note..." /> -->
+                    </page>
+                </xpath>
+
+                <!-- <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="npwp_num"/>
+                </xpath> -->
+
+                <xpath expr="//field[@name='phone']" position="after">
+                    <field name="fax"/>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

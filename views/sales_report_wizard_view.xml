@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="butir_sales_report_form" model="ir.ui.view">
+            <field name="name">butir_sales_report_form</field>
+            <field name="model">butir.sales.report.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="date_start"/>
+                        </group>
+                        <group>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                    <notebook invisible="1"  >  
+                        <page string="Invoices" >
+                            <field name="invoice_ids" />
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button type="object" name="action_submit" string="Submit" class="oe_highlight"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window
+            id="butir_sales_report_action"
+            res_model="butir.sales.report.wizard"
+            name="Sales Report"
+            src_model="account.invoice"
+            view_mode="form"
+            multi="True"
+            target="new"
+            key2="client_action_multi"
+        />
+        
+        <menuitem id="menu_butir_sales_report" name="Sales Report" parent="account.account_reports_management_menu" action="butir_sales_report_action" sequence="98"/>
+
+    </data>
+</odoo>
