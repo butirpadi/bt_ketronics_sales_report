@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Ketronics Odoo 12",
+    'name': "Ketronics Sales Report",
 
     'summary': """
-        PT. Ketronics Indonesia Custom Module""",
+        PT. Ketronics Indonesia Custom Module Sales Report""",
 
     'description': """
-        PT. Ketronics Indonesia Custom Module
+        PT. Ketronics Indonesia Custom Module Sales Report
     """,
 
     'author': "butirpadi@gmail.com",
