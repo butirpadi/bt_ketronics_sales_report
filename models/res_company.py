@@ -5,10 +5,12 @@ from odoo.tools.translate import html_translate
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    invoice_footer_note = fields.Text(string='Invoice Footer')
-    invoice_footer_html_note = fields.Html('Invoice Note', translate=html_translate)
-    # npwp_num = fields.Char('NPWP')
-    fax = fields.Char('Fax')
+    pph_23_id = fields.Many2one(
+        string='PPH 23',
+        comodel_name='account.tax',
+        ondelete='cascade',
+    )
+    
     
     
     

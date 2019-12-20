@@ -19,19 +19,20 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'stock', 'account', 'sale_management', 'mrp'],
+    'depends': ['base', 'stock', 'account', 'sale_management', 'mrp', 'vit_efaktur'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
         # views
-        # 'views/res_company_view.xml',
+        'views/res_company_view.xml',
         # 'views/account_invoice_view.xml',
         # 'views/statement_of_account_view.xml',
         # 'views/product_template_view.xml',
         # 'views/stock_picking_view.xml',
         # 'views/sale_order_view.xml',
         'views/sales_report_wizard_view.xml',
+        'views/account_invoice_lines.xml',
         # 'views/templates.xml',
         # reports
         # 'reports/statement_of_account_report.xml',
@@ -39,6 +40,7 @@
         # 'reports/packing_list_report.xml',
         'reports/action_report.xml',
         'reports/sales_report.xml',
+        'reports/sales_report_detail.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

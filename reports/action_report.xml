@@ -16,6 +16,22 @@
             <field name="dpi">96</field>
         </record>
         
+        <record model="report.paperformat" id="bt_ketronics_sales_report_detail_paper_format">
+            <field name="name">bt_ketronics_sales_report_paper_format</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_width">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">7</field>
+            <field name="margin_right">7</field>
+            <field name="margin_bottom">14</field>
+            <field name="margin_left">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">96</field>
+        </record>
+        
         <report 
             id="action_butir_sales_report" 
             model="butir.sales.report.wizard" 
@@ -26,6 +42,17 @@
             name="bt_ketronics_sales_report.butir_sales_report_template" 
             file="bt_ketronics_sales_report.butir_sales_report_template"
             paperformat="bt_ketronics_sales_report_paper_format" />
+        
+        <report 
+            id="action_butir_sales_report_detail" 
+            model="butir.sales.report.wizard" 
+            string="Sales Report" 
+            report_type="qweb-pdf" 
+            attachment_use="False"
+            print_report_name="'Sales_Report_%s' % object.date_start" 
+            name="bt_ketronics_sales_report.butir_sales_report_detail_template" 
+            file="bt_ketronics_sales_report.butir_sales_report_detail_template"
+            paperformat="bt_ketronics_sales_report_detail_paper_format" />
 
 
     </data>

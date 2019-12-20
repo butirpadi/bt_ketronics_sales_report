@@ -1,0 +1,12 @@
+<odoo>
+    <data>
+
+        <record id="butir_account_invoice_lines_action_form" model="ir.actions.act_window">
+            <field name="name">Invoice Lines</field>
+            <field name="res_model">account.invoice.line</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="butir_menu_account_invoice_lines" name="Invoice Lines" parent="account.menu_analytic_accounting" action="butir_account_invoice_lines_action_form" sequence="999"/>
+    </data>
+</odoo>
