@@ -18,7 +18,7 @@ class AccountInvoiceLine(models.Model):
     def _compute_efaktur_text(self):
         for rec in self:
             if rec.prefix_berikat != '' and rec.efaktur_id is not None:
-                rec.efaktur_text = rec.prefix_berikat + '.' + rec.efaktur_id.name
+                rec.efaktur_text = (rec.prefix_berikat or '') + '.' + (rec.efaktur_id.name or '')
             elif rec.efaktur_id:
                 rec.efaktur_text = rec.efaktur_id.name
             elif rec.prefix_berikat:
