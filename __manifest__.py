@@ -41,6 +41,7 @@
         'reports/action_report.xml',
         'reports/sales_report.xml',
         'reports/sales_report_detail.xml',
+        'reports/sales_report_detail_new.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

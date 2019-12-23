@@ -4,25 +4,23 @@ from odoo import api, fields, models
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    sale_line_id = fields.Many2one('sale.order.line', string='Sale Order Line')
-    sale_order_id = fields.Many2one('sale.order', string='SO Ref')
-    manufacture_order_id = fields.Many2one('mrp.production', string="MO Reff")
+    prefix_berikat = fields.Char(
+        related='invoice_id.prefix_berikat', string='Prefix NSFP', store=True)
+    efaktur_id = fields.Many2one(
+        'vit.efaktur', related='invoice_id.efaktur_id', string='Nomor eFaktur', store=True)
+    date_invoice = fields.Date(
+        related='invoice_id.date_invoice',
+        store=True)
+    efaktur_text = fields.Char(
+        string="eFaktur", compute="_compute_efaktur_text", store=True)
 
-    # order_lines = fields.Many2many('sale.order.line', 'sale_order_line_invoice_rel',
-    #                                'invoice_line_id', 'order_line_id',  string='Order Lines', copy=False)
-
-    sale_line_ids = fields.Many2many(
-        'sale.order.line',
-        'sale_order_line_invoice_rel',
-        'invoice_line_id', 'order_line_id',
-        string='Sales Order Lines', copy=False)
-    
-    @api.onchange('sale_line_id')
-    def _onchange_sale_line_id(self):
-        self.product_id = self.sale_line_id.product_id.id
-        self.quantity = 1
-        self.price_unit = self.sale_line_id.price_unit
-        print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-        print('Product : ' + str(self.sale_line_id.product_id.name))
-        print('Price Unit : ' + str(self.sale_line_id.price_unit))
-        print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+    @api.depends('efaktur_id', 'prefix_berikat')
+    def _compute_efaktur_text(self):
+        for rec in self:
+            if rec.prefix_berikat != '' and rec.efaktur_id is not None:
+                rec.efaktur_text = rec.prefix_berikat + '.' + rec.efaktur_id.name
+            elif rec.efaktur_id:
+                rec.efaktur_text = rec.efaktur_id.name
+            elif rec.prefix_berikat:
+                rec.efaktur_text = None
+            

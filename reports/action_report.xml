@@ -53,6 +53,17 @@
             name="bt_ketronics_sales_report.butir_sales_report_detail_template" 
             file="bt_ketronics_sales_report.butir_sales_report_detail_template"
             paperformat="bt_ketronics_sales_report_detail_paper_format" />
+        
+        <report 
+            id="action_butir_sales_report_detail_new" 
+            model="butir.sales.report.wizard" 
+            string="Sales Report" 
+            report_type="qweb-pdf" 
+            attachment_use="False"
+            print_report_name="'Sales_Report_%s' % object.date_start" 
+            name="bt_ketronics_sales_report.butir_sales_report_detail_template_new" 
+            file="bt_ketronics_sales_report.butir_sales_report_detail_template_new"
+            paperformat="bt_ketronics_sales_report_detail_paper_format" />
 
 
     </data>
