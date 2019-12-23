@@ -144,6 +144,16 @@
                                                     </td>
                                                     <td class="text-right">
                                                         <!-- PPH 23 -->
+                                                        <t t-if="is_usd">
+                                                            <t t-set="harga_idr" t-value="line.invoice_id.currency_id._convert(line.price_unit, doc.get_idr_currency(),user.company_id,line.date_invoice)" />
+                                                        </t>
+                                                        <t t-else="is_usd">
+                                                            <t t-set="harga_idr" t-value="line.price_unit" />
+                                                        </t>
+
+                                                        <t t-set="pph23" t-value="doc.get_line_pph(line)" />
+                                                        <t t-if="pph23" t-set="pph_amount" t-value="pph23.amount / 100 * harga_idr * line.quantity" />
+                                                        <t t-if="pph23" t-esc="'{0:,.2f}'.format(pph_amount)" />
                                                     </td>
                                                     <td class="text-right">
                                                         <!-- KURS -->
@@ -153,13 +163,7 @@
                                                         </t>
                                                     </td>
                                                     <td class="text-right">
-                                                        <!-- HARGA IDR -->
-                                                        <t t-if="is_usd">
-                                                            <t t-set="harga_idr" t-value="line.invoice_id.currency_id._convert(line.price_unit, doc.get_idr_currency(),user.company_id,line.date_invoice)" />
-                                                        </t>
-                                                        <t t-else="is_usd">
-                                                            <t t-set="harga_idr" t-value="line.price_unit" />
-                                                        </t>
+                                                        <!-- HARGA IDR -->                                                        
                                                         <t t-esc="'{0:,.2f}'.format(harga_idr)" />
                                                     </td>
                                                     <td class="text-right">
