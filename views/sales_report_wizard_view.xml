@@ -14,7 +14,7 @@
                             <field name="date_to"/>
                         </group>
                     </group>
-                    <notebook>  
+                    <notebook invisible="1" >  
                         <page string="Invoices" >
                             <field name="invoice_line_ids" >
                                 <tree>
