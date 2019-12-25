@@ -14,9 +14,21 @@
                             <field name="date_to"/>
                         </group>
                     </group>
-                    <notebook invisible="1"  >  
+                    <notebook>  
                         <page string="Invoices" >
-                            <field name="invoice_ids" />
+                            <field name="invoice_line_ids" >
+                                <tree>
+                                    <field name="invoice_id" />
+                                    <field name="efaktur_text" />
+                                    <field name="date_invoice" />
+                                    <field name="product_id" />
+                                    <field name="quantity" />
+                                    <field name="uom_id" />
+                                    <field name="price_unit" />
+                                    <field name="price_subtotal" sum="Price Subtotal" />
+                                    <field name="invoice_line_tax_ids" widget="many2many_tags" />
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                     <footer>

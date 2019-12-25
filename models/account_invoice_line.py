@@ -13,6 +13,7 @@ class AccountInvoiceLine(models.Model):
         store=True)
     efaktur_text = fields.Char(
         string="eFaktur", compute="_compute_efaktur_text", store=True)
+    invoice_type = fields.Selection(related='invoice_id.type', readonly=True, store=True)
 
     @api.depends('efaktur_id', 'prefix_berikat')
     def _compute_efaktur_text(self):

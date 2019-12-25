@@ -41,7 +41,9 @@
             print_report_name="'Sales_Report_%s' % object.date_start" 
             name="bt_ketronics_sales_report.butir_sales_report_template" 
             file="bt_ketronics_sales_report.butir_sales_report_template"
-            paperformat="bt_ketronics_sales_report_paper_format" />
+            paperformat="bt_ketronics_sales_report_paper_format" 
+            menu="False"
+            />
         
         <report 
             id="action_butir_sales_report_detail" 
@@ -52,7 +54,9 @@
             print_report_name="'Sales_Report_%s' % object.date_start" 
             name="bt_ketronics_sales_report.butir_sales_report_detail_template" 
             file="bt_ketronics_sales_report.butir_sales_report_detail_template"
-            paperformat="bt_ketronics_sales_report_detail_paper_format" />
+            paperformat="bt_ketronics_sales_report_detail_paper_format" 
+            menu="False"
+            />
         
         <report 
             id="action_butir_sales_report_detail_new" 
@@ -63,7 +67,9 @@
             print_report_name="'Sales_Report_%s' % object.date_start" 
             name="bt_ketronics_sales_report.butir_sales_report_detail_template_new" 
             file="bt_ketronics_sales_report.butir_sales_report_detail_template_new"
-            paperformat="bt_ketronics_sales_report_detail_paper_format" />
+            paperformat="bt_ketronics_sales_report_detail_paper_format" 
+            menu="False"
+            />
 
 
     </data>

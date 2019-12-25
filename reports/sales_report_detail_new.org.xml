@@ -70,32 +70,23 @@
                                             <t t-set="dpp_ppn_idr_has_print" t-value="0" />
                                             <t t-set="monthname" t-value="0" />
                                             <t t-set="invdate" t-value="0" />
-                                            <t t-set="dpp_idr" t-value="0" />
-                                            <t t-set="ppn_idr" t-value="0" />
-                                            <t t-set="dpp_ppn_idr" t-value="0" />
                                             <t t-set="no_faktur" t-value="0" />
                                             <t t-set="partner_name" t-value="0" />
 
-                                            <t t-set="sum_dpp_idr" t-value="sum_dpp_idr + inv_by_faktur[fak]['report_line'][0]['dpp_idr']" />
-                                            <t t-set="sum_ppn_idr" t-value="sum_ppn_idr + inv_by_faktur[fak]['report_line'][0]['ppn_idr']" />
-                                            <t t-set="sum_dpp_ppn_idr" t-value="sum_dpp_ppn_idr + inv_by_faktur[fak]['report_line'][0]['dpp_ppn_idr']" />
-
-                                            <t t-foreach="inv_by_faktur[fak]['report_line']" t-as="line">
-                                                <t t-set="get_month_name_str" t-value="line['bulan']"/>
-                                                <t t-set="get_invdate" t-value="line['tanggal']"/>
-                                                <t t-set="get_no_faktur" t-value="line['nomor_faktur']"/>
-                                                <t t-set="get_partner_name" t-value="line['partner']"/>
+                                            <t t-foreach="inv_by_faktur[fak]['invoice_line']" t-as="line">
+                                                <t t-set="get_month_name_str" t-value="doc.get_month_name(line.date_invoice)"/>
+                                                <t t-set="get_invdate" t-value="line.date_invoice"/>
+                                                <t t-set="get_no_faktur" t-value="fak"/>
+                                                <t t-set="get_partner_name" t-value="line.invoice_id.partner_id.name"/>
+                                                <t t-set="is_usd" t-value="doc.is_usd(line.invoice_id.currency_id.id)"/>
                                                 <t t-set="usd_to_idr_rate" t-value="0"/>
                                                 <t t-set="harga_idr" t-value="0"/>
-                                                <t t-set="get_dpp_idr" t-value="line['dpp_idr']"/>
-                                                <t t-set="get_ppn_idr" t-value="line['ppn_idr']"/>
-                                                <t t-set="get_dpp_ppn_idr" t-value="line['dpp_ppn_idr']"/>
 
                                                 <tr>
                                                     <td>
                                                         <t t-if="invdate != get_invdate">
                                                             <t t-set="invdate" t-value="get_invdate"/>
-                                                            <t t-esc="invdate.strftime('%d/%m/%Y')" />
+                                                            <span t-field="line.date_invoice" t-field-options='{"format": "dd/MM/yyyy"}' />
                                                         </t>
                                                     </td>
                                                     <td>
@@ -117,71 +108,88 @@
                                                         </t>
                                                     </td>
                                                     <td>
-                                                        <t t-esc="line['product']" />
+                                                        <span t-field="line.product_id.name" />
                                                     </td>
                                                     <td class="text-right">
-                                                        <t t-esc="'{0:,.2f}'.format(line['qty'])" />
+                                                        <t t-esc="'{0:,.2f}'.format(line.quantity)" />
                                                     </td>
                                                     <td>
-                                                        <t t-esc="line['sat']" />
+                                                        <span t-field="line.uom_id.name" />
                                                     </td>
                                                     <td class="text-right">
-                                                        <t t-if="line['is_usd']">
-                                                            <t t-esc="'{0:,.2f}'.format(line['dpp_usd'])" />
-                                                            <t t-set="sum_dpp_usd" t-value="sum_dpp_usd + line['dpp_usd']" />
+                                                        <t t-set="dpp_usd_amount" t-value="0" />
+                                                        <t t-if="is_usd">
+                                                            <t t-set="dpp_usd_amount" t-value="line.quantity * line.price_unit" />
+                                                            <t t-esc="'{0:,.2f}'.format(dpp_usd_amount)" />
+                                                            <t t-set="sum_dpp_usd" t-value="sum_dpp_usd + dpp_usd_amount" />
                                                         </t>
                                                     </td>
                                                     <td class="text-right">
-                                                        <t t-if="line['is_usd']">
-                                                            <t t-if="line['ppn_usd'] > 0" t-esc="'{0:,.2f}'.format(line['ppn_usd'])" />
-                                                            <t t-if="line['ppn_usd'] > 0" t-set="sum_ppn_usd" t-value="sum_ppn_usd + line['ppn_usd']" />
+                                                        <t t-set="ppn_usd_amount" t-value="0" />
+                                                        <t t-if="is_usd">
+                                                            <t t-set="ppn_usd" t-value="doc.get_line_ppn(line)" />
+                                                            <t t-if="ppn_usd_amount > 0">
+                                                                <t t-esc="'{0:,.2f}'.format(ppn_usd_amount)" />
+                                                                <t t-set="sum_ppn_usd" t-value="sum_ppn_usd + ppn_usd_amount" />
+                                                            </t>
                                                         </t>
                                                     </td>
                                                     <td class="text-right">
-                                                        <t t-if="line['is_usd']">
-                                                            <t t-esc="'{0:,.2f}'.format(line['dpp_ppn_usd'])" />
-                                                            <t t-set="sum_dpp_ppn_usd" t-value="sum_dpp_ppn_usd + line['dpp_ppn_usd']" />
+                                                        <t t-set="dpp_ppn_usd_amount" t-value="0" />
+                                                        <t t-if="is_usd">
+                                                            <t t-set="dpp_ppn_usd_amount" t-value="dpp_usd_amount + ppn_usd_amount" />
+                                                            <t t-esc="'{0:,.2f}'.format(dpp_ppn_usd_amount)" />
+                                                            <t t-set="sum_dpp_ppn_usd" t-value="sum_dpp_ppn_usd + dpp_ppn_usd_amount" />
                                                         </t>
                                                     </td>
                                                     <td class="text-right">
                                                         <!-- PPH 23 -->
-                                                        <t t-if="line['pph'] > 0" t-esc="'{0:,.2f}'.format(line['pph'])" />
+                                                        <t t-if="is_usd">
+                                                            <t t-set="harga_idr" t-value="line.invoice_id.currency_id._convert(line.price_unit, doc.get_idr_currency(),user.company_id,line.date_invoice)" />
+                                                        </t>
+                                                        <t t-else="is_usd">
+                                                            <t t-set="harga_idr" t-value="line.price_unit" />
+                                                        </t>
+
+                                                        <t t-set="pph23" t-value="doc.get_line_pph(line)" />
+                                                        <t t-if="pph23" t-set="pph_amount" t-value="pph23.amount / 100 * harga_idr * line.quantity" />
+                                                        <t t-if="pph23" t-esc="'{0:,.2f}'.format(pph_amount)" />
                                                     </td>
                                                     <td class="text-right">
                                                         <!-- KURS -->
-                                                        <t t-if="line['is_usd']">
-                                                            <t t-esc="'{0:,.2f}'.format(line['kurs'])" />
+                                                        <t t-if="is_usd">
+                                                            <t t-set="usd_to_idr_rate" t-value="doc.get_invoice_rate(line.invoice_id)" />
+                                                            <t t-esc="'{0:,.2f}'.format(usd_to_idr_rate)" />
                                                         </t>
                                                     </td>
                                                     <td class="text-right">
-                                                        <!-- HARGA IDR -->
-                                                        <t t-esc="'{0:,.2f}'.format(line['harga'])" />
+                                                        <!-- HARGA IDR -->                                                        
+                                                        <t t-esc="'{0:,.2f}'.format(harga_idr)" />
                                                     </td>
                                                     <td class="text-right">
                                                         <!-- TOTAL HARGA IDR -->
-                                                        <t t-esc="'{0:,.2f}'.format(line['total_harga'])" />
-                                                        <t t-set="sum_total_idr" t-value="sum_total_idr + line['total_harga']" />
+                                                        <t t-esc="'{0:,.2f}'.format(harga_idr * line.quantity)" />
+                                                        <t t-set="sum_total_idr" t-value="harga_idr * line.quantity" />
                                                     </td>
                                                     <td class="text-right">
                                                         <!-- DPP IDR -->
-                                                        <t t-if="get_dpp_idr != dpp_idr">
-                                                            <t t-set="dpp_idr" t-value="get_dpp_idr"/>
-                                                            <t t-esc="'{0:,.2f}'.format(dpp_idr)" />
-                                                        </t>
+                                                        <t t-if="dpp_idr_has_print==0" t-esc="'{0:,.2f}'.format(inv_by_faktur[fak]['dpp_idr'])" />
+                                                        <t t-if="dpp_idr_has_print==0" t-set="sum_dpp_idr" t-value="sum_dpp_idr + inv_by_faktur[fak]['dpp_idr']" />
+                                                        <t t-set="dpp_idr_has_print" t-value="1" />
                                                     </td>
                                                     <td class="text-right">
                                                         <!-- PPN IDR -->
-                                                        <t t-if="get_ppn_idr != ppn_idr">
-                                                            <t t-set="ppn_idr" t-value="get_ppn_idr"/>
-                                                            <t t-if="ppn_idr > 0" t-esc="'{0:,.2f}'.format(ppn_idr)" />
+                                                        <t t-if="inv_by_faktur[fak]['ppn_idr'] > 0">
+                                                            <t t-if="ppn_idr_has_print==0" t-esc="'{0:,.2f}'.format(inv_by_faktur[fak]['ppn_idr'])" />
+                                                            <t t-if="ppn_idr_has_print==0" t-set="sum_ppn_idr" t-value="sum_ppn_idr + inv_by_faktur[fak]['ppn_idr']" />
+                                                            <t t-set="ppn_idr_has_print" t-value="1" />
                                                         </t>
                                                     </td>
                                                     <td class="text-right">
                                                         <!-- DPP PPN IDR -->
-                                                        <t t-if="get_dpp_ppn_idr != dpp_ppn_idr">
-                                                            <t t-set="dpp_ppn_idr" t-value="get_dpp_ppn_idr"/>
-                                                            <t t-esc="'{0:,.2f}'.format(dpp_ppn_idr)" />
-                                                        </t>
+                                                        <t t-if="dpp_ppn_idr_has_print==0" t-esc="'{0:,.2f}'.format(inv_by_faktur[fak]['dpp_ppn_idr'])" />
+                                                        <t t-if="dpp_ppn_idr_has_print==0" t-set="sum_dpp_ppn_idr" t-value="sum_dpp_ppn_idr + inv_by_faktur[fak]['dpp_ppn_idr']" />
+                                                        <t t-set="dpp_ppn_idr_has_print" t-value="1" />
                                                     </td>
                                                 </tr>
                                             </t>
